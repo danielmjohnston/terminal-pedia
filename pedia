@@ -1,0 +1,53 @@
+#! /usr/bin/python3
+import os
+import sys
+import wikipedia
+import subprocess
+
+quit = ['quit', 'Quit', 'exit', 'Exit']
+
+def read_choice(num_results):
+    choice = input("> ")
+    if choice in quit:
+        exit()
+    try:
+        choice = int(choice)
+    except:
+        print("Please enter a valid number.")
+        choice = read_choice(num_choices)
+    if choice > num_results:
+        print("Please enter a valid number.")
+        choice = read_choice(num_results)
+    return choice
+
+def page_nav(page):
+    choice = input("\nfull, images, quit\n> ")
+    if choice == "full":
+        print(page.content)
+        page_nav(page)
+    elif choice == "images":
+        for x in page.images:
+            print(x)
+            page_nav(page)
+    elif choice in quit:
+        exit()
+
+choice = sys.argv
+choice = ' '.join(choice[1:])
+print(choice)
+res = wikipedia.search(choice)
+num_choices = len(res)
+i=1
+for x in res:
+    print("%2d) %s" % (i,x))
+    i=i+1
+choice = read_choice(num_choices) - 1
+
+choice = res[choice]
+choice = wikipedia.page(choice)
+print(choice.summary)
+page_nav(choice)
+
+
+#subprocess.check_output(['w3m',img])
+#os.system('w3m '+img)
